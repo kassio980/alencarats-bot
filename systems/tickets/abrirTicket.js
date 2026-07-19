@@ -1,2 +1,19 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
-module.exports={customId:'abrir_ticket',async execute(c,i){const u=i.user;try{await u.send('👋 Olá! Atendimento iniciado. Fale por aqui.')}catch(e){return i.reply({content:'❌ Habilite mensagens diretas do servidor!',ephemeral:true})}const ch=await i.guild.channels.create({name:`🎫・ticket-${u.username}`,parent:c.config.categoria_tickets,permissionOverwrites:[{id:i.guild.id,deny:['ViewChannel']},{id:u.id,allow:['ViewChannel','SendMessages']},{id:c.user.id,allow:['ViewChannel','ManageChannels','SendMessages']}]});await c.db.set(`ticket_${u.id}`,{canalId:ch.id,mensagens:[]});await c.db.set(`ticket_canal_${ch.id}`,u.id);await ch.send({embeds:[new EmbedBuilder().setColor('#00ff88').setTitle('🎫 NOVO ATENDIMENTO').addFields({name:'👤 Cliente',value:`<@${u.id}>`})]});await i.reply({content:'✅ Ticket aberto! Verifique sua DM.',ephemeral:true})}};
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+module.exports={
+  customId:'abrir_ticket',
+  async execute(c,i){
+    const cat = i.values[0], u = i.user;
+    if(await c.db.get(`ticket_${u.id}`)) return i.reply({content:'❌ Você já tem um atendimento aberto!',ephemeral:true});
+    try{await u.send(`👋 Olá! Seu atendimento **${cat.toUpperCase()}** já começou. Fale por aqui.`)}catch(e){return i.reply({content:'❌ Habilite as mensagens diretas do servidor!',ephemeral:true})}
+    const canal = await i.guild.channels.create({name:`ticket-${u.username}`,parent:c.config.categoria_tickets,
+    permissionOverwrites:[{id:i.guild.id,deny:['ViewChannel']},{id:u.id,allow:['ViewChannel','SendMessages']},{id:c.user.id,allow:['ViewChannel','ManageChannels','SendMessages']}]});
+    await c.db.set(`ticket_${u.id}`,{canalId:canal.id,categoria:cat,mensagens:[]});
+    await c.db.set(`ticket_canal_${canal.id}`,u.id);
+    await canal.send({embeds:[new EmbedBuilder().setColor('#00ff88').setTitle(`🎫 ATENDIMENTO: ${cat.toUpperCase()}`).addFields({name:'👤 Cliente',value:`<@${u.id}>`})],
+    components:[new ActionRowBuilder().addComponents(
+      new ButtonBuilder().setCustomId('fechar_ticket').setLabel('🔒 FECHAR').setStyle(ButtonStyle.Danger),
+      new ButtonBuilder().setCustomId('transcript_ticket').setLabel('📜 RELATÓRIO').setStyle(ButtonStyle.Secondary)
+    )]});
+    i.reply({content:'✅ Atendimento aberto! Verifique sua DM.',ephemeral:true});
+  }
+};
