@@ -15,7 +15,7 @@ module.exports = {
         )],
       components:[new ActionRowBuilder().addComponents(
         new ButtonBuilder()
-          .setCustomId('loja')
+          .setCustomId('loja_ver') // ← NOME EXATO QUE ESTÁ NO ARQUIVO loja.js
           .setLabel('🛒 VER LOJA')
           .setStyle(ButtonStyle.Primary)
       )]
