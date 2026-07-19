@@ -1,0 +1,2 @@
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+module.exports={name:'veri',adminOnly:true,execute:(c,m)=>{m.channel.send({embeds:[new EmbedBuilder().setColor(c.config.cor_embed).setTitle('🔥 VERIFICAÇÃO ALENCARATS').setDescription('> A Alencarats pede que você se verifique para ter acesso a todos os canais!')],components:[new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('btn_verificacao').setLabel('🔥 VERIFICA-SE 🔥').setStyle(ButtonStyle.Danger).setEmoji('✅'))]});m.delete()}};
