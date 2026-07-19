@@ -1,2 +1,25 @@
 const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
-module.exports={name:'painel',adminOnly:true,execute:(c,m)=>m.channel.send({embeds:[new EmbedBuilder().setColor(c.config.cor_embed).setTitle('🎫 CENTRAL DE ATENDIMENTO').setDescription('Escolha uma categoria abaixo')],components:[new ActionRowBuilder().addComponents(new StringSelectMenuBuilder().setCustomId('abrir_ticket').setPlaceholder('📋 Selecione...').addOptions([{label:'🛒 Comprar',value:'c'},{label:'💰 Pagamento',value:'p'},{label:'📦 Entrega',value:'e'},{label:'❌ Dúvidas',value:'d'},{label:'⚙️ Técnico',value:'t'}]))]});m.delete()}};
+module.exports = {
+  name:'painel',
+  adminOnly:true,
+  execute:(c,m)=>{
+    m.channel.send({
+      embeds:[new EmbedBuilder().setColor(c.config.cor_embed)
+        .setTitle('🎫 CENTRAL DE ATENDIMENTO')
+        .setDescription('Escolha uma categoria abaixo')],
+      components:[new ActionRowBuilder().addComponents(
+        new StringSelectMenuBuilder()
+          .setCustomId('abrir_ticket')
+          .setPlaceholder('📋 Selecione...')
+          .addOptions([
+            {label:'🛒 Comprar',value:'c'},
+            {label:'💰 Pagamento',value:'p'},
+            {label:'📦 Entrega',value:'e'},
+            {label:'❌ Dúvidas',value:'d'},
+            {label:'⚙️ Técnico',value:'t'}
+          ])
+      )]
+    });
+    m.delete();
+  }
+};
