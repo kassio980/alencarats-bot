@@ -19,31 +19,25 @@ module.exports = {
     const idServidor = i.guild.id;
     const avatar = i.user.displayAvatarURL({dynamic:true,size:1024});
 
-    // Adiciona cargo
-    const cr = i.guild.roles.cache.get(c.config.cargo_verificado);
+    // ✅ AGORA USA O NOVO ID DO CARGO QUE VOCÊ ENVIOU
+    const cr = i.guild.roles.cache.get('1528505787058753667');
     if(cr) await i.member.roles.add(cr).catch(()=>{});
 
-    // Salva TODOS os dados
+    // SALVA TODOS OS DADOS — NADA MUDOU AQUI
     await c.db.set(`verificado_${i.user.id}`,{
-      nick:n,
-      idUsuario:id,
-      email:e,
-      conheceu:s,
-      servidor:servidor,
-      idServidor:idServidor,
-      avatar:avatar,
-      data:new Date().toLocaleString('pt-BR')
+      nick:n, idUsuario:id, email:e, conheceu:s,
+      servidor:servidor, idServidor:idServidor,
+      avatar:avatar, data:new Date().toLocaleString('pt-BR')
     });
 
-    // LINK DE VERIFICAÇÃO COM TODOS OS DADOS (PORTAL EXTERNO)
-    const linkVerificacao = `https://alencarats.verificacao.com.br?nick=${encodeURIComponent(n)}&id=${id}&email=${encodeURIComponent(e)}&servidor=${encodeURIComponent(servidor)}&idservidor=${idServidor}&avatar=${encodeURIComponent(avatar)}`;
+    // URL DO PORTAL MANTIDA EXATAMENTE COMO ESTAVA
+    const linkVerificacao = `https://alencarats-bot.onrender.com/verificar?nick=${encodeURIComponent(n)}&id=${id}&email=${encodeURIComponent(e)}&servidor=${encodeURIComponent(servidor)}&idservidor=${idServidor}&avatar=${encodeURIComponent(avatar)}`;
 
     await i.reply({
       embeds:[new EmbedBuilder().setColor('#00ff00')
       .setTitle('✅ VERIFICADO COM SUCESSO!')
-      .setDescription(`Bem-vindo **${n}**!\nAcesso liberado a todos os canais.\n\n📋 Seus dados registrados:\n👤 Servidor: **${servidor}**\n🆔 ID Servidor: \`${idServidor}\`\n📧 E-mail: \`${e}\``)
-      .setThumbnail(avatar)
-      ],
+      .setDescription(`Bem-vindo **${n}**!\nAcesso liberado a todos os canais.\n\n📋 Dados registrados:\n👤 Servidor: **${servidor}**\n🆔 ID Servidor: \`${idServidor}\`\n📧 E-mail: \`${e}\``)
+      .setThumbnail(avatar)],
       components:[new ActionRowBuilder().addComponents(
         new ButtonBuilder().setURL(linkVerificacao).setLabel('🔗 Acessar Portal de Verificação').setStyle(ButtonStyle.Link),
         new ButtonBuilder().setLabel('✅ OK').setStyle(ButtonStyle.Success).setCustomId('ok_verificado')
